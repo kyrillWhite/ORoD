@@ -10,7 +10,6 @@ export default {
   name: 'ParameterText',
   props: {
     name: String,
-    callback: Function,
   },
   data() {
     return {
