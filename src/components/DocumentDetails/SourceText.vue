@@ -1,6 +1,6 @@
 <template>
   <div class="source-text">
-    
+    {{document.text}}
   </div>
 </template>
 

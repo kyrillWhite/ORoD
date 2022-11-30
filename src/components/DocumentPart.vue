@@ -5,7 +5,9 @@
     <div>Ранг</div>
     <div></div>
     <document-element v-for="(document, index) in documents"
-      :name="`N`" :key="index" :document="{number: index + 1, ...document}"/>
+      :key="index" :document="{number: index + 1, ...document}"
+      :details-is-opened="documentsDetailsIsOpened[index]" @doc-details-opened="openDocumentDetails"
+      @doc-details-closed="closeDocumentDetails"/>
   </div>
 </template>
 
@@ -22,8 +24,23 @@ export default {
   },
   data() {
     return {
-      
+      documentsDetailsIsOpened: {},
+      docWithOpenedDetailsNum: null,
     }
+  },
+  methods: {
+    openDocumentDetails(num) {
+      if (this.docWithOpenedDetailsNum !== null) {
+        this.closeDocumentDetails(this.docWithOpenedDetailsNum);
+      }
+
+      this.documentsDetailsIsOpened[num] = true;
+      this.docWithOpenedDetailsNum = num;
+    },
+    closeDocumentDetails(num) {
+      this.documentsDetailsIsOpened[num] = false;
+      this.docWithOpenedDetailsNum = null;
+    },
   },
 }
 </script>

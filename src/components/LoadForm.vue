@@ -24,7 +24,6 @@ export default {
       let files = [...this.$refs[`load-form_${this.loadId}`].files];
       let regexp = new RegExp(`^.+${this.extension}$`);
       if (files.every((file) => file.name.match(regexp))) {
-        console.log(files[0].name);
         this.$emit('on-load', this.$refs[`load-form_${this.loadId}`].files);
       }
       else {
