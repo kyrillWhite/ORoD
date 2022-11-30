@@ -10,18 +10,39 @@
     </h1>
   </header>
   <main class="main">
-    <load-part class="main__part" @on-load-ont="updateOntolgy"
-      @on-load-txt="pushDocument" @load-error="outputError"/>
-    <parameter-part class="main__part" />
     <div class="main__part">
-      <div class="main__part_header">
+      <div class="main__part_title">
+        Загрузка файлов
+      </div>
+      <div class="main__part_content">
+        <load-part class="main__part" @on-load-ont="updateOntolgy"
+          @on-load-txt="pushDocument" @load-error="outputError"/>
+      </div>
+    </div>
+    <div class="main__part">
+      <div class="main__part_title">
+        Настройка параметров
+      </div>
+      <div class="main__part_content">
+        <parameter-part class="main__part" />
+      </div>
+    </div>
+    <div class="main__part">
+      <div class="main__part_title">
         Онтология
       </div>
       <div class="main__part_content">
         {{!ontology ? 'Онтология не загружена' : ontology.name}}
       </div>
     </div>
-    <document-part class="main__part" :documents="documents"/>
+    <div class="main__part">
+      <div class="main__part_title">
+        Документы
+      </div>
+      <div class="main__part_content">
+        <document-part class="main__part" :documents="documents"/>
+      </div>
+    </div>
   </main>
   <footer class="footer">
     2022 - kyrillWhite<br>
