@@ -5,7 +5,7 @@
     <div>Ранг</div>
     <div></div>
     <document-element v-for="(document, index) in documents"
-      :name="`N`" :key="index" :document="document"/>
+      :name="`N`" :key="index" :document="{number: index + 1, ...document}"/>
   </div>
 </template>
 
@@ -19,7 +19,6 @@ export default {
   },
   props: {
     documents: Array,
-    callback: Function,
   },
   data() {
     return {

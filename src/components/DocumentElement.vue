@@ -1,7 +1,7 @@
 <template>
   <div class="document__number">{{document.number}}</div>
   <div class="document__name">{{document.name}}</div>
-  <div class="document__score">{{document.rank}}</div>
+  <div class="document__score">{{!document.rank ? '-' : document.rank}}</div>
   <button class="document__options"></button>
   <div class="document__menu" hidden>
     <button class="document__menu_item">Исходный текст</button>
@@ -29,7 +29,6 @@ export default {
   },
   props: {
     document: Object,
-    callback: Function,
   },
   data() {
     return {

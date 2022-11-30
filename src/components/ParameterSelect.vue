@@ -13,7 +13,6 @@ export default {
   props: {
     parameterId: Number,
     name: String,
-    callback: Function,
   },
   data() {
     return {

@@ -17,7 +17,6 @@ export default {
     ParameterSelect,
   },
   props: {
-    callback: Function,
   },
   data() {
     return {

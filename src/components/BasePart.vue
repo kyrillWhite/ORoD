@@ -1,13 +1,27 @@
 <template>
+  <div class="pop-up-error" v-for="(error, index) in errors" v-bind:key="index">
+    <div class="pop-up-error__text">
+      {{error}}
+    </div>
+  </div>
   <header class="header">
     <h1 class="header__logo">
         ORoD
     </h1>
   </header>
   <main class="main">
-    <load-part/>
-    <parameter-part/>
-    <document-part :documents="documents"/>
+    <load-part class="main__part" @on-load-ont="updateOntolgy"
+      @on-load-txt="pushDocument" @load-error="outputError"/>
+    <parameter-part class="main__part" />
+    <div class="main__part">
+      <div class="main__part_header">
+        Онтология
+      </div>
+      <div class="main__part_content">
+        {{!ontology ? 'Онтология не загружена' : ontology.name}}
+      </div>
+    </div>
+    <document-part class="main__part" :documents="documents"/>
   </main>
   <footer class="footer">
     2022 - kyrillWhite<br>
@@ -29,12 +43,26 @@ export default {
   },
   data() {
     return {
+      errors: [],
       N: 0,
       K: 0,
-      documents: [{number: 0, name: 'D1', rank: 0}, 
-        {number: 0, name: 'D1', rank: 0}]
+      ontology: null,
+      documents: [],
     };
   },
-
+  methods: {
+    updateOntolgy(ontology) {
+      this.ontology = ontology;
+    },
+    pushDocument(document) {
+      this.documents.push(document);
+    },
+    outputError(errorText) {
+      this.errors.push(errorText);
+      setTimeout(()=> {
+        this.errors.shift();
+      }, 4000);
+    },
+  },
 }
 </script>
