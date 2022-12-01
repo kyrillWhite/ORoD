@@ -4,7 +4,12 @@
       <div class="intermediate-result__title">
         Привязавшаяся онтология
       </div>
-      <button>Скачать</button>
+      <div class="intermediate-result__load" v-if="document?.attachedOntology">
+        <button v-on:click="downloadAttachedOntology">Скачать</button>
+      </div>
+      <div class="intermediate-result__text" v-else>
+        Онтология не загружена
+      </div>      
     </div>
     <div class="intermediate-result__block">
       <div class="intermediate-result__title">
@@ -39,8 +44,25 @@ export default {
   },
   data() {
     return {
-
+      
     };
-  }
+  },
+  methods: {
+    downloadAttachedOntology() {
+      let json = JSON.stringify(this.document.attachedOntology.ontology);
+      let fileName = `${this.document.attachedOntology.name.replace('.ont', '')}_${(new Date())
+        .toLocaleString().replaceAll(/[ ,:.]/g, '_')}.ont`;
+      let file = new File([json], {name: fileName, type: "octet/stream"});
+      let url = window.URL.createObjectURL(file);
+
+      var a = document.createElement("a");
+      document.body.appendChild(a);
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    },
+  },
 }
 </script>
