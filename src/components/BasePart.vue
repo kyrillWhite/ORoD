@@ -54,6 +54,7 @@
 import DocumentPart from './DocumentPart.vue';
 import LoadPart from './LoadPart.vue';
 import ParameterPart from './ParameterPart.vue';
+import Attach from '@/assets/js/Attach';
 
 export default {
   name: 'BasePart',
@@ -74,8 +75,18 @@ export default {
   methods: {
     updateOntolgy(ontology) {
       this.ontology = ontology;
+
+      for (let i in this.documents) {
+        let attachResult = this.attachOntologyToDocument(this.documents[i]);
+        Object.assign(this.documents[i], attachResult);
+      }
     },
     pushDocument(document) {
+      if (this.ontology) {
+        let attachResult = this.attachOntologyToDocument(document);
+        Object.assign(document, attachResult);
+      }
+
       this.documents.push(document);
     },
     outputError(errorText) {
@@ -83,6 +94,13 @@ export default {
       setTimeout(()=> {
         this.errors.shift();
       }, 4000);
+    },
+    attachOntologyToDocument(document) {
+      try {
+        return Attach.attachOntology(document.text, this.ontology);
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
 }
