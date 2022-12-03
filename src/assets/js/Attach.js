@@ -10,7 +10,7 @@ export default class Attach {
       throw "Invalid ontology object";
     }
 
-    let sentences = document.split('.').filter((s) => s);
+    let sentences = document.split(/\. */).filter((s) => s);
     let ontologyTerms = ontology.ontology.nodes.map((n, i) => ({name: n.name, index: i}));
 
     let stemmedOntology = this.stemOntology(ontologyTerms);
@@ -21,9 +21,10 @@ export default class Attach {
     
     let attachedTerms = stemmedOntology.map((t) => t.sourceTerm);
 
-    let filteredSentences = sentences.filter((_, i) => 
-      stemmedOntology.some((t) => stemmedSentences[i].join(' ').includes(t.words.join(' '))));
-
+    let filteredSentences = sentences.map((s, i) => ({text: s,
+      terms: attachedTerms.filter((_, j) => stemmedSentences[i].join(' ').includes(stemmedOntology[j].words.join(' ')))}))
+      .filter((s) => s.terms.length);
+      
     let attachedOntology = JSON.parse(JSON.stringify(ontology));
 
     let stemmedTerms = Array.apply(null, Array(attachedOntology.ontology.nodes.length)).map(() => false);

@@ -4,10 +4,14 @@
     <div>Название документа</div>
     <div>Ранг</div>
     <div></div>
+    <div></div>
     <document-element v-for="(document, index) in documents"
       :key="index" :document="{number: index + 1, ...document}"
       :details-is-opened="documentsDetailsIsOpened[index]" @doc-details-opened="openDocumentDetails"
-      @doc-details-closed="closeDocumentDetails"/>
+      :index="index"
+      @doc-details-closed="closeDocumentDetails"
+      @find-rank="findRank"
+      @remove-document="removeDocument"/>
   </div>
 </template>
 
@@ -40,6 +44,12 @@ export default {
     closeDocumentDetails(num) {
       this.documentsDetailsIsOpened[num] = false;
       this.docWithOpenedDetailsNum = null;
+    },
+    findRank(index) {
+      this.$emit('find-rank', index);
+    },
+    removeDocument(index) {
+      this.$emit('remove-document', index);
     },
   },
 }

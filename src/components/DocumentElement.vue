@@ -1,8 +1,9 @@
 <template>
-  <div class="document__number">{{document.number}}</div>
-  <div class="document__name">{{document.name}}</div>
-  <div class="document__score">{{!document.rank ? '-' : document.rank}}</div>
-  <button class="document__options" v-on:click="detailsMenuClick"></button>
+  <div class="document__field">{{document.number}}</div>
+  <div class="document__field">{{document.name}}</div>
+  <div class="document__field">{{!document.ranking ? '-' : document.ranking.rank.toFixed(3)}}</div>
+  <button class="document__option" v-on:click="detailsMenuClick"></button>
+  <button class="document__option" v-on:click="removeDocument"></button>
   <div class="document__details" :hidden="!detailsIsOpened">
     <div class="document__menu">
       <button class="document__menu_item" v-on:click="openDetailsPart(1)">Исходный текст</button>
@@ -12,7 +13,7 @@
     <div class="document__details">
       <source-text :document="document" v-if="(openedDetailsPart == 1)"/>
       <intermediate-result :document="document" v-else-if="(openedDetailsPart == 2)"/>
-      <rank-result :document="document" v-else-if="(openedDetailsPart == 3)"/>
+      <rank-result :document="document" v-else-if="(openedDetailsPart == 3)" @find-rank="findRank"/>
     </div>
   </div>
 </template>
@@ -30,6 +31,7 @@ export default {
     RankResult,
   },
   props: {
+    index: Number,
     detailsIsOpened: Boolean,
     document: Object,
   },
@@ -49,6 +51,12 @@ export default {
     openDetailsPart(detailsPart) {
       this.openedDetailsPart = this.openedDetailsPart == detailsPart ? 
         null : detailsPart;
+    },
+    findRank() {
+      this.$emit('find-rank', this.index);
+    },
+    removeDocument() {
+      this.$emit('remove-document', this.index);
     },
   },
 }
