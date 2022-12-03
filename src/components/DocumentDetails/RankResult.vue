@@ -23,7 +23,10 @@
         Вес дуги (E<sub>ij</sub>)
       </div>
       <div class="rank-result__header">
-        B<sub>i</sub>*
+        B<sub>i*</sub>
+      </div>
+      <div class="rank-result__header">
+        B<sub>*j</sub>
       </div>
       <template v-for="(termPair, index) in document.ranking.pairs" :key="index">
         <div class="rank-result__cell">
@@ -33,26 +36,29 @@
           {{termPair.term2}}
         </div>
         <div class="rank-result__cell">
-          {{termPair.s}}
+          {{termPair.s.toFixed(3)}}
         </div>
         <div class="rank-result__cell">
-          {{termPair.sNorm}}
+          {{termPair.sNorm.toFixed(3)}}
         </div>
         <div class="rank-result__cell">
-          {{termPair.pathsCount}}
+          {{termPair.pathsCount.toFixed(3)}}
         </div>
         <div class="rank-result__cell">
-          {{termPair.power}}
+          {{termPair.power.toFixed(3)}}
         </div>
         <div class="rank-result__cell">
-          {{termPair.weight}}
+          {{termPair.weight.toFixed(3)}}
         </div>
         <div class="rank-result__cell">
-          {{termPair.beta}}
+          {{termPair.betaI.toFixed(3)}}
+        </div>
+        <div class="rank-result__cell">
+          {{termPair.betaJ.toFixed(3)}}
         </div>
       </template>    
     </div>
-    <button v-else>Вычислить оценку</button>
+    <button v-else v-on:click="findRank">Вычислить оценку</button>
   </div>
 </template>
 
@@ -66,6 +72,11 @@ export default {
     return {
 
     };
+  },
+  methods: {
+    findRank() {
+      this.$emit('find-rank');
+    }
   }
 }
 </script>

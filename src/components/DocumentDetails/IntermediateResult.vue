@@ -29,7 +29,7 @@
       <div class="intermediate-result__list">
         <div class="intermediate-result__item"
           v-for="(sentence, index) in document?.sentences" :key="index">
-          {{`${index + 1}. ${sentence}`}}
+          {{`${index + 1}. ${sentence.text}.`}}
         </div>
       </div>
     </div>

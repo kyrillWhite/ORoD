@@ -24,7 +24,12 @@
         Настройка параметров
       </div>
       <div class="main__part_content">
-        <parameter-part class="main__part" />
+        <parameter-part class="main__part"
+        :pN="N" :pK="K" :pB="B"
+        @ranking-all="rankingAll"
+        @changed-n="changeN"
+        @changed-k="changeK"
+        @changed-b="changeB"/>
       </div>
     </div>
     <div class="main__part">
@@ -40,7 +45,9 @@
         Документы
       </div>
       <div class="main__part_content">
-        <document-part class="main__part" :documents="documents"/>
+        <document-part class="main__part" :documents="documents"
+        @find-rank="findRank"
+        @remove-document="removeDocument"/>
       </div>
     </div>
   </main>
@@ -55,6 +62,7 @@ import DocumentPart from './DocumentPart.vue';
 import LoadPart from './LoadPart.vue';
 import ParameterPart from './ParameterPart.vue';
 import Attach from '@/assets/js/Attach';
+import Rank from '@/assets/js/Rank';
 
 export default {
   name: 'BasePart',
@@ -66,8 +74,9 @@ export default {
   data() {
     return {
       errors: [],
-      N: 0,
-      K: 0,
+      N: 10,
+      K: 10,
+      B: 1,
       ontology: null,
       documents: [],
     };
@@ -101,6 +110,27 @@ export default {
       } catch (e) {
         console.log(e);
       }
+    },
+    rankingAll(N, K, B) {
+      for (let i in this.documents) {
+        this.documents[i].ranking = Rank.findRank(this.documents[i], N, K, B);
+      }
+    },
+    findRank(index) {
+      this.documents[index].ranking = Rank.findRank(this.documents[index], this.N, this.K, this.B);
+    },
+    removeDocument(index) {
+      console.log(index);
+      this.documents.splice(index, 1);
+    },
+    changeN(value) {
+      this.N = value;
+    },
+    changeK(value) {
+      this.K = value;
+    },
+    changeB(value) {
+      this.B = value;
     },
   },
 }
