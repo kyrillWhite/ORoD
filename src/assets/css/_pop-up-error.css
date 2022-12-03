@@ -1,0 +1,13 @@
+.pop-up-error {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.pop-up-error__text {
+  margin: var(--small-spacing);
+  padding: var(--small-spacing);
+  background-color: var(--secondary-color);
+  border-radius: var(--base-border-radius);
+}

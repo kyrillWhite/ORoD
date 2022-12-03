@@ -1,0 +1,14 @@
+.parameter {
+  display: flex;
+  flex: 1 0 auto;
+  margin: var(--small-spacing) auto;
+}
+
+.parameter__name {
+  margin: 0 0 0 auto;
+  padding-right: var(--small-spacing);
+}
+
+.parameter__input {
+  margin: 0 auto 0 0;
+}

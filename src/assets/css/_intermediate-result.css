@@ -1,0 +1,12 @@
+.intermediate-result {
+  margin: var(--average-spacing);
+  display: flex;
+  flex-direction: column;
+}
+
+.intermediate-result__title {
+  margin: 0 auto var(--small-spacing) 0;
+  border-bottom: solid;
+  border-width: 1px;
+  border-color: var(--primary-color);
+}

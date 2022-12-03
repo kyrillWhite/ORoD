@@ -1,0 +1,13 @@
+.parameter-part {
+  display: flex;
+  flex-direction: column;
+}
+
+.parameter-part__parameters {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.parameter-part__ranking {
+  margin: var(--average-spacing) 0 0 0;
+}

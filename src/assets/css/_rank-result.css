@@ -1,0 +1,21 @@
+.rank-result {
+  font-size: var(--smallest-font-size);
+  table-layout: auto;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rank-result__header {
+  border-bottom: solid;
+  border-width: 1px;
+  border-color: var(--primary-color);
+}
+
+.rank-result__cell {
+  padding-top: var(--small-spacing);
+  padding-right: var(--small-spacing);
+}
+
+.rank-result__start {
+  text-align: start;
+}
