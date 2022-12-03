@@ -1,7 +1,7 @@
 <template>
   <div class="parameter">
     <div class="parameter__name">{{name}}</div>
-    <input class="parameter__text" type="text" v-model="parameter" v-on:change="parameterChanged">
+    <input class="parameter__input text-input" type="text" v-model="parameter" v-on:change="parameterChanged">
   </div>
 </template>
 
@@ -16,6 +16,11 @@ export default {
     return {
       parameter: this.value,
     }
+  },
+  watch: {
+    value() {
+      this.parameter = this.value;
+    },
   },
   methods: {
     parameterChanged() {

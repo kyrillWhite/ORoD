@@ -1,9 +1,11 @@
 <template>
-  <label :for="`load-form_${loadId}`"
-    class="load-form__label">Загрузить {{loadObject}}</label>
-  <input type="file" :id="`load-form_${loadId}`" :ref="`load-form_${loadId}`"
-    :accept="extension" :multiple="multipleFiles" hidden
-    v-on:change="loadFile">
+  <div class="load-part__element">
+    <label :for="`load-form_${loadId}`"
+      class="load-part__button button">Загрузить {{loadObject}}</label>
+    <input type="file" :id="`load-form_${loadId}`" :ref="`load-form_${loadId}`"
+      :accept="extension" :multiple="multipleFiles" hidden
+      v-on:change="loadFile">
+  </div>
 </template>
 
 <script>

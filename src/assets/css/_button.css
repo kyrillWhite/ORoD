@@ -1,0 +1,50 @@
+.button {
+  border: none;
+  color: var(--font-color);
+  border-radius: var(--base-border-radius);
+  background-color: var(--secondary-color);
+  padding: var(--smallest-spacing);
+  user-select: none;
+  text-align: center;
+}
+
+.button:not(.button__not-active):active {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+.button__remove:hover,
+.button__close:hover,
+.button__more:hover,
+.button:not(.button__not-active):hover {
+  filter: brightness(80%);
+}
+
+.button__not-active {
+  background-color: var(--bg-color);
+  color:  var(--secondary-bg-color);
+}
+
+.button__close {
+  background: url(../images/close.png) no-repeat;
+}
+
+.button__more {
+  background: url(../images/more.png) no-repeat;
+}
+
+.button__remove {
+  background: url(../images/cross.png) no-repeat;
+}
+
+.button__close,
+.button__more,
+.button__remove {
+  background-size: 18px;
+  background-position: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  padding: 0;
+  margin: var(--small-spacing);
+}

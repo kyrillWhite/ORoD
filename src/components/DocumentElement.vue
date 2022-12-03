@@ -1,21 +1,42 @@
 <template>
-  <div class="document__field">{{document.number}}</div>
-  <div class="document__field">{{document.name}}</div>
-  <div class="document__field">{{!document.ranking ? '-' : document.ranking.rank.toFixed(3)}}</div>
-  <button class="document__option" v-on:click="detailsMenuClick"></button>
-  <button class="document__option" v-on:click="removeDocument"></button>
-  <div class="document__details" :hidden="!detailsIsOpened">
-    <div class="document__menu">
-      <button class="document__menu_item" v-on:click="openDetailsPart(1)">Исходный текст</button>
-      <button class="document__menu_item" v-on:click="openDetailsPart(2)">Промежуточный результат</button>
-      <button class="document__menu_item" v-on:click="openDetailsPart(3)">Результат ранжирования</button>
-    </div>
-    <div class="document__details">
-      <source-text :document="document" v-if="(openedDetailsPart == 1)"/>
-      <intermediate-result :document="document" v-else-if="(openedDetailsPart == 2)"/>
-      <rank-result :document="document" v-else-if="(openedDetailsPart == 3)" @find-rank="findRank"/>
-    </div>
-  </div>
+  <tr :class="document.detailsAreOpened ? 'document__field_selected' : (document.number % 2 == 0 ? `document__field_odd` : '')">
+    <th :class="(document.detailsAreOpened ? 'document__field_selected' : '') + ' document__field'" scope="row">{{document.number}}</th>
+    <td :class="`document__field`">{{document.name}}</td>
+    <td :class="`document__field document__center`">
+      {{!document.ranking ? '-' : document.ranking.rank.toFixed(3)}}
+    </td>
+    <td :class="`document__option document__center`">
+      <button :class="document.detailsAreOpened ? 'button__close' : 'button__more'" v-on:click="detailsMenuClick"></button>
+    </td>
+    <td :class="`document__option document__center`">
+      <button class="button__remove" v-on:click="removeDocument"></button>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="100">
+      <div class="document__details" v-if="document.detailsAreOpened">
+        <div class="document__menu">
+          <button :class="`document__menu_item tab ${openedDetailsPart == 1 ? 'tab__active' : ''}`" 
+            v-on:click="openDetailsPart(1)">
+            Исходный текст
+          </button>
+          <button :class="menuTabClasses(2)" 
+            v-on:click="openDetailsPart(2)">
+            Промеж. результат
+          </button>
+          <button :class="menuTabClasses(3)" 
+            v-on:click="openDetailsPart(3)">
+            Результат оценки
+          </button>
+        </div>
+        <div class="document__details_content">
+          <source-text :document="document" v-if="(openedDetailsPart == 1)"/>
+          <intermediate-result :document="document" v-else-if="(openedDetailsPart == 2)"/>
+          <rank-result :document="document" v-else-if="(openedDetailsPart == 3)" @find-rank="findRank"/>
+        </div>
+      </div>
+    </td>
+  </tr>
 </template>
 
 <script>
@@ -32,31 +53,41 @@ export default {
   },
   props: {
     index: Number,
-    detailsIsOpened: Boolean,
     document: Object,
   },
   data() {
     return {
-      openedDetailsPart: null,
+      openedDetailsPart: 1,
     }
   },
   methods: {
     detailsMenuClick() {
-      this.$emit(`doc-details-${this.detailsIsOpened ? 'closed' : 'opened'}`,
-        this.document.number - 1);
-      if (this.detailsIsOpened) {
-        this.openedDetailsPart = null;
+      this.$emit(`doc-details-${this.document.detailsAreOpened ? 'closed' : 'opened'}`,
+        this.document.index);
+      if (this.document.detailsAreOpened) {
+        this.openedDetailsPart = 1;
       }
     },
     openDetailsPart(detailsPart) {
-      this.openedDetailsPart = this.openedDetailsPart == detailsPart ? 
-        null : detailsPart;
+      if (this.document.attachedOntology || detailsPart == 1) {
+        this.openedDetailsPart = detailsPart;
+      }
     },
     findRank() {
       this.$emit('find-rank', this.index);
     },
     removeDocument() {
       this.$emit('remove-document', this.index);
+    },
+    menuTabClasses(index) {
+      let classes = 'document__menu_item tab';
+      if (this.document?.attachedOntology) {
+        classes += this.openedDetailsPart == index ? ' tab__active' : '';
+      }
+      else {
+        classes += ' tab__not-active';
+      }
+      return classes;
     },
   },
 }

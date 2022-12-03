@@ -1,0 +1,24 @@
+.tab {
+  border: none;
+  color: var(--font-color);
+  border-radius: var(--base-border-radius) var(--base-border-radius) 0 0;
+  background-color: var(--secondary-color);
+  padding: var(--smallest-spacing);
+  user-select: none;
+  text-align: center;
+  white-space: normal;
+}
+
+.tab__active {
+  background-color: var(--bg-color);
+}
+
+.tab__not-active {
+  background-color: var(--secondary-bg-color);
+  color:  var(--bg-color);
+}
+
+
+.tab:not(.tab__not-active):hover {
+  filter: brightness(80%);
+}

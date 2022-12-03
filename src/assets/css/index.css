@@ -1,0 +1,16 @@
+@import "_common.css";
+@import "_footer.css";
+@import "_header.css";
+@import "_variables.css";
+@import "_page.css";
+@import "_fonts.css";
+@import "_button.css";
+@import "_load-part.css";
+@import "_text-input.css";
+@import "_parameter.css";
+@import "_parameter-part.css";
+@import "_document.css";
+@import "_tab.css";
+@import "_intermediate-result.css";
+@import "_rank-result.css";
+@import "_pop-up-error.css";

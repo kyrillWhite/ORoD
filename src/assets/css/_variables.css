@@ -1,0 +1,42 @@
+:root {
+  --font-color: #E3E3E3;
+  --header-footer-color: #131014;
+  --title-color: #E0D8E0;
+  --primary-color: #B1D1A5;
+  --secondary-color: #5F7065;
+  --bg-color: #2E2E2E;
+  --secondary-bg-color: #242424;
+  --select-color: #313a35;
+
+  --font-family: 'Noto Sans', sans-serif;
+  --line-height: 1.25;
+  --base-font-size: 18px;
+  --smallest-font-size: 14px;
+  --small-font-size: 16px;
+  --large-font-size: 24px;
+  --small-title-font-size: 32px;
+  --title-font-size: 48px;
+  --button-width: 135px;
+  --service-height: 40px;
+  --text-input-size: 350px;
+  --max-side-margin: 222px;
+  --base-spacing: 1rem;
+  --average-spacing: 1.25rem;
+  --large-spacing: 1.5rem;
+  --small-spacing: 0.5rem;
+  --smallest-spacing: 0.25rem;
+
+  --max-text-input-width: 60px;
+
+  --max-size-main-part: 1220px;
+  --max-size-menu-part: 910px;
+  --max-size-modal: 640px;
+  --max-size-main-part-less: 990px;
+  --max-size-menu-part-less: 760px;
+  --max-size-modal-less: 470px;
+  --max-size-main-part-small: 750px;
+  --max-size-modal-small: 240px;
+
+  --base-border-radius: 10px;
+  --avatar-size: 2.25rem;
+}

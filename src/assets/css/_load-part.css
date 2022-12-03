@@ -1,0 +1,15 @@
+.load-part {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.load-part__element {
+  flex: 1 0 auto;
+  display: flex;
+}
+
+.load-part__button {
+  flex: 1 0 auto;
+  margin: var(--small-spacing) 0;
+}

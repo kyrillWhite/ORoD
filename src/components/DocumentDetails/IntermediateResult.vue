@@ -1,36 +1,25 @@
 <template>
-  <div class="intermediate-result">
-    <div class="intermediate-result__block">
+  <div>
+    <div class="intermediate-result">
       <div class="intermediate-result__title">
-        Привязавшаяся онтология
+        Привязавшаяся онтология:
       </div>
-      <div class="intermediate-result__load" v-if="document?.attachedOntology">
-        <button v-on:click="downloadAttachedOntology">Скачать</button>
-      </div>
-      <div class="intermediate-result__text" v-else>
-        Онтология не загружена
-      </div>      
+        <button class="button" v-on:click="downloadAttachedOntology">Скачать</button>
     </div>
-    <div class="intermediate-result__block">
+    <div class="intermediate-result">
       <div class="intermediate-result__title">
-        Привязавшиеся понятия
+        Привязавшиеся понятия:
       </div>
-      <div class="intermediate-result__list">
-        <div class="intermediate-result__item"
-          v-for="(term, index) in document?.terms" :key="index">
+        <div v-for="(term, index) in document?.terms" :key="index">
           {{`${index + 1}. ${term}`}}
         </div>
-      </div>
     </div>
-    <div class="intermediate-result__block">
+    <div class="intermediate-result">
       <div class="intermediate-result__title">
-        Отфильтрованные предложения
+        Отфильтрованные предложения:
       </div>
-      <div class="intermediate-result__list">
-        <div class="intermediate-result__item"
-          v-for="(sentence, index) in document?.sentences" :key="index">
-          {{`${index + 1}. ${sentence.text}.`}}
-        </div>
+      <div v-for="(sentence, index) in document?.sentences" :key="index">
+        {{`${index + 1}. ${sentence.text}.`}}
       </div>
     </div>
   </div>

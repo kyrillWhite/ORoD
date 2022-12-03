@@ -1,65 +1,69 @@
 <template>
-  <div class="rank-result">
-    <div class="rank-result__result" v-if="document?.ranking">
-      <div class="rank-result__header">
-        Понятие 1
-      </div>
-      <div class="rank-result__header">
-        Понятие 2
-      </div>
-      <div class="rank-result__header">
-        Степ. близости (S<sub>ij</sub>)
-      </div>
-      <div class="rank-result__header">
-        Норм. степ. близости (S'<sub>ij</sub>)
-      </div>
-      <div class="rank-result__header">
-        Кол-во путей (P'<sub>ij</sub>)
-      </div>
-      <div class="rank-result__header">
-        Мощность понятия (Ub)
-      </div>
-      <div class="rank-result__header">
-        Вес дуги (E<sub>ij</sub>)
-      </div>
-      <div class="rank-result__header">
-        B<sub>i*</sub>
-      </div>
-      <div class="rank-result__header">
-        B<sub>*j</sub>
-      </div>
-      <template v-for="(termPair, index) in document.ranking.pairs" :key="index">
-        <div class="rank-result__cell">
+  <table class="rank-result" v-if="document?.ranking">
+    <thead>
+      <tr>
+        <th class="rank-result__start rank-result__header" scope="col">
+          Понятие 1
+        </th>
+        <th class="rank-result__start rank-result__header" scope="col">
+          Понятие 2
+        </th>
+        <th class="rank-result__start rank-result__header" scope="col">
+          Степ. близости (S<sub>ij</sub>)
+        </th>
+        <th class="rank-result__start rank-result__header" scope="col">
+          Норм. степ. близости (S'<sub>ij</sub>)
+        </th>
+        <th class="rank-result__start rank-result__header" scope="col">
+          Кол-во путей (P'<sub>ij</sub>)
+        </th>
+        <th class="rank-result__start rank-result__header" scope="col">
+          Мощность понятия (Ub)
+        </th>
+        <th class="rank-result__start rank-result__header" scope="col">
+          Вес дуги (E<sub>ij</sub>)
+        </th>
+        <th class="rank-result__start rank-result__header" scope="col">
+          B<sub>i*</sub>
+        </th>
+        <th class="rank-result__start rank-result__header" scope="col">
+          B<sub>*j</sub>
+        </th>          
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(termPair, index) in document.ranking.pairs" :key="index">
+        <td class="rank-result__cell rank-result__start" scope="row">
           {{termPair.term1}}
-        </div>
-        <div class="rank-result__cell">
+        </td>
+        <td class="rank-result__cell rank-result__start" scope="row">
           {{termPair.term2}}
-        </div>
-        <div class="rank-result__cell">
+        </td>
+        <td class="rank-result__cell">
           {{termPair.s.toFixed(3)}}
-        </div>
-        <div class="rank-result__cell">
+        </td>
+        <td class="rank-result__cell">
           {{termPair.sNorm.toFixed(3)}}
-        </div>
-        <div class="rank-result__cell">
+        </td>
+        <td class="rank-result__cell">
           {{termPair.pathsCount.toFixed(3)}}
-        </div>
-        <div class="rank-result__cell">
+        </td>
+        <td class="rank-result__cell">
           {{termPair.power.toFixed(3)}}
-        </div>
-        <div class="rank-result__cell">
+        </td>
+        <td class="rank-result__cell">
           {{termPair.weight.toFixed(3)}}
-        </div>
-        <div class="rank-result__cell">
+        </td>
+        <td class="rank-result__cell">
           {{termPair.betaI.toFixed(3)}}
-        </div>
-        <div class="rank-result__cell">
+        </td>
+        <td class="rank-result__cell">
           {{termPair.betaJ.toFixed(3)}}
-        </div>
-      </template>    
-    </div>
-    <button v-else v-on:click="findRank">Вычислить оценку</button>
-  </div>
+        </td>
+      </tr> 
+    </tbody>
+  </table>
+  <button class="button document__details_button" v-else v-on:click="findRank">Вычислить оценку</button>
 </template>
 
 <script>
