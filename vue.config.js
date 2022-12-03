@@ -1,5 +1,7 @@
 const { defineConfig } = require('@vue/cli-service')
+
 module.exports = defineConfig({
+  publicPath: '/ORoD/',
   transpileDependencies: true,
   pages: {
     index: {
