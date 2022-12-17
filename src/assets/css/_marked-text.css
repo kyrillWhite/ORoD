@@ -1,0 +1,4 @@
+.marked-text {
+  background-color: var(--primary-color);
+  color: var(--secondary-bg-color);
+}

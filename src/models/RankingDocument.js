@@ -16,9 +16,9 @@ export default class RankingDocument {
     this.text = text;
   }
 
-  attachOntology(ontology) {
+  attachOntology(ontology, N) {
     try {
-      let {attachedOntology, terms, sentences} = Attach.attachOntology(this.text, ontology);
+      let {attachedOntology, terms, sentences} = Attach.attachOntology(this.text, ontology, N);
       this.attachedOntology = attachedOntology;
       this.terms = terms;
       this.sentences = sentences;

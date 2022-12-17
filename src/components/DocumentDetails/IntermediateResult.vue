@@ -24,7 +24,13 @@
         Отфильтрованные предложения:
       </div>
       <div v-for="(sentence, index) in document?.sentences" :key="index">
-        {{`${index + 1}. ${sentence.text}.`}}
+        {{`${index + 1}. `}}
+        <span
+          v-for="(sentencePart, partIndex) in sentence.markedText" :key="partIndex"
+          :class="{'marked-text': sentencePart.mark}"
+          >
+            {{ sentencePart.text }}
+        </span>.
       </div>
     </div>
   </div>

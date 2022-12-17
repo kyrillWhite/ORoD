@@ -107,17 +107,29 @@ export default {
       documents: {},
     };
   },
+  watch: {
+    N(newN) {
+      if (newN !== 0 && !parseInt(newN)) {
+        this.changeN(0);
+      }
+      else {
+        for (let id in this.documents) {
+          this.documents[id].attachOntology(this.ontology, newN);
+        }
+      }
+    }
+  },
   methods: {
     updateOntology(ontology) {
       this.ontology = ontology;
 
       for (let id in this.documents) {
-        this.documents[id].attachOntology(this.ontology);
+        this.documents[id].attachOntology(this.ontology, this.N);
       }
     },
     pushDocument(document) {
       if (this.ontology) {
-        document.attachOntology(this.ontology);
+        document.attachOntology(this.ontology, this.N);
       }
 
       this.documents[document.id] = document;
