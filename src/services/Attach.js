@@ -1,17 +1,17 @@
 import { newStemmer } from "snowball-stemmers";
 
 export default class Attach {
-  static attachOntology(document, ontology) {
-    if (!document) {
-      throw "Invalid document object";
+  static attachOntology(documentText, ontology) {
+    if (!documentText) {
+      throw "Empty document text";
     }
 
-    if (!ontology || !ontology.ontology || !ontology.ontology.nodes || !ontology.ontology.relations) {
+    if (!ontology || !ontology.nodes || !ontology.relations) {
       throw "Invalid ontology object";
     }
 
-    let sentences = document.split(/\. */).filter((s) => s);
-    let ontologyTerms = ontology.ontology.nodes.map((n, i) => ({name: n.name, index: i}));
+    let sentences = documentText.split(/\. */).filter((s) => s);
+    let ontologyTerms = ontology.nodes.map((n, i) => ({name: n.name, index: i}));
 
     let stemmedOntology = this.stemOntology(ontologyTerms);
     let stemmedSentences = sentences.map((s) => this.stemSentence(s.toLowerCase().split(/[^а-яА-Яa-zA-Z0-9-]+/)));
@@ -25,17 +25,17 @@ export default class Attach {
       terms: attachedTerms.filter((_, j) => stemmedSentences[i].join(' ').includes(stemmedOntology[j].words.join(' ')))}))
       .filter((s) => s.terms.length);
       
-    let attachedOntology = JSON.parse(JSON.stringify(ontology));
+    let attachedOntology = ontology.getCopy();
 
-    let stemmedTerms = Array.apply(null, Array(attachedOntology.ontology.nodes.length)).map(() => false);
+    let stemmedTerms = Array.apply(null, Array(attachedOntology.nodes.length)).map(() => false);
 
     stemmedOntology.forEach(term => {
       stemmedTerms[term.index] = true;
     });
 
-    for (let i in attachedOntology.ontology.nodes) {
+    for (let i in attachedOntology.nodes) {
       if (!stemmedTerms[i]) {
-        attachedOntology.ontology.nodes[i].name = '';
+        attachedOntology.nodes[i].name = '';
       }
     }
 

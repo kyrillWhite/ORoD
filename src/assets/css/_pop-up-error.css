@@ -3,11 +3,16 @@
   top: 0;
   right: 0;
   z-index: 100;
+  width: var(--pop-error-width);
 }
-
-.pop-up-error__text {
-  margin: var(--small-spacing);
-  padding: var(--small-spacing);
+.pop-up-error__error {
+  display: flex;
   background-color: var(--secondary-color);
   border-radius: var(--base-border-radius);
+  margin: var(--small-spacing);
+}
+
+.pop-up-error__error_text {
+  padding: var(--small-spacing);
+  margin: auto auto auto 0;
 }

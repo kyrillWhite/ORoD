@@ -1,10 +1,10 @@
 export default class Rank {
   static findRank(document, N, K, B) {
-    if (!document || !document.attachedOntology || !document.attachedOntology.ontology ||
-      !document.attachedOntology.ontology.nodes || !document.attachedOntology.ontology.relations) {
+    if (!document || !document.attachedOntology ||
+      !document.attachedOntology.nodes || !document.attachedOntology.relations) {
       throw "Invalid document object";
     }
-    let ontology = document.attachedOntology.ontology;
+    let ontology = document.attachedOntology;
     let termPairs = [];
 
     let weights = this.findWeights(document);
@@ -42,7 +42,7 @@ export default class Rank {
   }
   
   static semanticProximity(document, weights, i, j, N, K, B, _mu) {
-    let ontology = document.attachedOntology.ontology;
+    let ontology = document.attachedOntology;
 
     const nodeTerm1 = ontology.nodes[i].name;
     const nodeTerm2 = ontology.nodes[j].name;
@@ -133,7 +133,7 @@ export default class Rank {
   }
 
   static findWeights(document) {
-    let ontology = document.attachedOntology.ontology;
+    let ontology = document.attachedOntology;
     let nCount = ontology.nodes.length;
     let weights = Array(nCount).fill(0).map(() => Array(nCount).fill(0));
 

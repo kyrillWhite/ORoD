@@ -1,14 +1,26 @@
 <template>
   <div class="load-part__element">
-    <label :for="`load-form_${loadId}`"
-      class="load-part__button button">Загрузить {{loadObject}}</label>
-    <input type="file" :id="`load-form_${loadId}`" :ref="`load-form_${loadId}`"
-      :accept="extension" :multiple="multipleFiles" hidden
-      v-on:change="loadFile">
+    <label 
+      class="load-part__button button" 
+      :for="`load-form_${loadId}`"
+    >
+      Загрузить {{loadObject}}
+    </label>
+    <input
+      type="file"
+      hidden
+      :id="`load-form_${loadId}`"
+      :ref="`load-form_${loadId}`"
+      :accept="extension"
+      :multiple="multipleFiles"
+      @change="loadFile"
+    >
   </div>
 </template>
 
 <script>
+import LoadFiles from '@/services/LoadFiles';
+
 export default {
   name: 'LoadForm',
   props: {
@@ -17,18 +29,13 @@ export default {
     loadId: Number,
     loadObject: String,
   },
-  data() {
-    return {
-    }
-  },
   methods: {
     loadFile() {
       let files = [...this.$refs[`load-form_${this.loadId}`].files];
-      let regexp = new RegExp(`^.+${this.extension}$`);
-      if (files.every((file) => file.name.match(regexp))) {
+
+      if (files.every((file) => LoadFiles.validateFileName(file.name, this.extension))) {
         this.$emit('on-load', this.$refs[`load-form_${this.loadId}`].files);
-      }
-      else {
+      } else {
         this.$emit('load-error', `Ожидался файл с расширением ${this.extension}`);
       }
     },

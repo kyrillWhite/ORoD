@@ -4,7 +4,12 @@
       <div class="intermediate-result__title">
         Привязавшаяся онтология:
       </div>
-        <button class="button" v-on:click="downloadAttachedOntology">Скачать</button>
+        <button
+          class="button"
+          @click="downloadAttachedOntology"
+        >
+          Скачать
+        </button>
     </div>
     <div class="intermediate-result">
       <div class="intermediate-result__title">
@@ -31,14 +36,12 @@ export default {
   props: {
     document: Object,
   },
-  data() {
-    return {
-      
-    };
-  },
   methods: {
     downloadAttachedOntology() {
-      let json = JSON.stringify(this.document.attachedOntology.ontology);
+      let json = JSON.stringify({
+        nodes: this.document.attachedOntology.nodes,
+        relations: this.document.attachedOntology.relations,
+      });
       let fileName = `${this.document.attachedOntology.name.replace('.ont', '')}_${(new Date())
         .toLocaleString().replaceAll(/[ ,:.]/g, '_')}.ont`;
       let file = new File([json], {name: fileName, type: "octet/stream"});

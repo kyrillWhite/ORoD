@@ -18,7 +18,7 @@
   flex: 1 0 auto;
   width: 100%;
   margin:auto;
-  max-width: 860px;
+  max-width: var(--max-size-main-part);
 }
 
 .page__part {
@@ -37,7 +37,7 @@
   margin: var(--small-spacing) var(--average-spacing);
   text-align: center;
   border-bottom: solid;
-  border-width: 1px;
+  border-bottom-width: 1px;
   border-color: var(--primary-color);
 }
 

@@ -1,12 +1,28 @@
 <template>
   <div class="parameter-part">
     <div class="parameter-part__parameters">
-      <parameter-text :name="`N`" :value="N" @parameter-changed="changeN"/>
-      <parameter-text :name="`K`" :value="K" @parameter-changed="changeK"/>
-      <parameter-text :name="`B`" :value="B" @parameter-changed="changeB"/>
+      <ParameterText
+        :name="`N`"
+        :value="N"
+        @parameter-changed="changeN"
+      />
+      <ParameterText 
+        :name="`K`" 
+        :value="K" 
+        @parameter-changed="changeK"
+      />
+      <ParameterText 
+        :name="`B`" 
+        :value="B"
+        @parameter-changed="changeB"
+      />
     </div>
-    <button :class="`button parameter-part__ranking ${!canRanking ? 'button__not-active' : ''}`"
-      :disabled="!canRanking" v-on:click="rankingAll">
+    <button
+      class="button parameter-part__ranking"
+      :class="{'button__not-active' : !canRanking}"
+      :disabled="!canRanking"
+      @click="rankingAll"
+    >
       Выполнить ранжирование
     </button>
   </div>
@@ -53,29 +69,19 @@ export default {
       this.$emit('changed-b', this.B);
     },
     rankingAll() {
-      let hasError = false;
-
-      if (this.N !== 0 && !parseFloat(this.N)) {
-        this.$emit('ranking-error', `Параметр N должен быть числом`);
+      if (this.N !== 0 && !parseInt(this.N)) {
         this.changeN(0);
-        hasError = true;
       }
 
-      if (this.K !== 0 && !parseFloat(this.K)) {
-        this.$emit('ranking-error', `Параметр K должен быть числом`);
+      if (this.K !== 0 && !parseInt(this.K)) {
         this.changeK(0);
-        hasError = true;
       }
 
-      if (this.B !== 0 && !parseFloat(this.B)) {
-        this.$emit('ranking-error', `Параметр B должен быть числом`);
+      if (this.B !== 0 && !parseInt(this.B)) {
         this.changeB(0);
-        hasError = true;
       }
 
-      if (!hasError){
-        this.$emit('ranking-all', this.N, this.K, this.B);
-      }
+      this.$emit('ranking-all');
     },
   },
 }
