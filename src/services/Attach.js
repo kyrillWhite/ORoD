@@ -1,7 +1,7 @@
 import { newStemmer } from "snowball-stemmers";
 
 export default class Attach {
-  static attachOntology(documentText, ontology) {
+  static attachOntology(documentText, ontology, N) {
     if (!documentText) {
       throw "Empty document text";
     }
@@ -14,14 +14,16 @@ export default class Attach {
     let ontologyTerms = ontology.nodes.map((n, i) => ({name: n.name, index: i}));
 
     let stemmedOntology = this.stemOntology(ontologyTerms);
-    let stemmedSentences = sentences.map((s) => this.stemSentence(s.toLowerCase().split(/[^а-яА-Яa-zA-Z0-9-]+/)));
+    let splitedSentences = sentences.map((s) => s.split(/([^а-яА-Яa-zA-Z0-9-]+)/));
+    let stemmedSentences = sentences.map((s) => this.stemSentence(s.split(/[^а-яА-Яa-zA-Z0-9-]+/)));
 
     stemmedOntology = stemmedOntology.filter((t) =>
       t.words.length > 0 && stemmedSentences.some((s) => s.join(' ').includes(t.words.join(' '))));
     
     let attachedTerms = stemmedOntology.map((t) => t.sourceTerm);
-
-    let filteredSentences = sentences.map((s, i) => ({text: s,
+    let markedSentences = this.getMarkedSentences(splitedSentences, stemmedSentences, stemmedOntology);
+    
+    let filteredSentences = sentences.map((s, i) => ({text: s, markedText: markedSentences[i],
       terms: attachedTerms.filter((_, j) => stemmedSentences[i].join(' ').includes(stemmedOntology[j].words.join(' ')))}))
       .filter((s) => s.terms.length);
       
@@ -39,11 +41,74 @@ export default class Attach {
       }
     }
 
+    const neededNodes = this.findNeededNodes(attachedOntology, N);
+    attachedOntology.nodes = attachedOntology.nodes.filter(node => neededNodes.includes(node.id));
+    attachedOntology.relations = attachedOntology.relations.filter(rel =>
+      neededNodes.includes(rel.source_node_id) && neededNodes.includes(rel.destination_node_id));
+
     return {
       attachedOntology: attachedOntology,
       terms: attachedTerms,
       sentences: filteredSentences,
     };
+  }
+
+  static findNeededNodes(ontology, N) {
+    let relations = {};
+
+    for (let node of ontology.nodes) {
+      relations[node.id] = [];
+    }
+
+    for (let relation of ontology.relations) {
+      relations[relation.source_node_id].push(relation.destination_node_id);
+    }
+
+    let usedNodes = new Set();
+
+    for (let node of ontology.nodes) {
+      if (node.name !== '') {
+        let nodeUsedNodes = this.findUsedNodes(ontology, relations, node.id, N);
+        nodeUsedNodes.forEach(nod => usedNodes.add(nod));
+      }
+    }
+
+    return Array.from(usedNodes);
+  }
+
+  static findUsedNodes(ontology, relations, id, N) {
+    const ontologyNodesNames = {};
+
+    ontology.nodes.forEach(node => {
+      ontologyNodesNames[node.id] = node.name;
+    });
+
+    let usedNodes = new Set();
+    let query = [];
+    query.push({ prevs: [], depth: 0, id: id });
+
+    while (query.length != 0) {
+      let p = query.pop();
+      let depth = p.depth;
+      let u = p.id;
+      let prevs = p.prevs;
+
+      if (ontologyNodesNames[u] !== '') {
+        prevs.forEach(prev => usedNodes.add(prev));
+      }
+
+      if (depth != N) {
+        query.push(...relations[u].map((id) => (
+          {
+            prevs: [u, ...prevs],
+            depth: depth + 1,
+            id: id
+          }
+        )));
+      }
+    }
+
+    return usedNodes;
   }
 
   static stemOntology(terms) {
@@ -58,6 +123,71 @@ export default class Attach {
 
   static stemSentence(words) {
     let rusStemmer = newStemmer('russian');
-    return words.map((w) => rusStemmer.stem(w)).filter((t) => t);
+    return words.map((w) => rusStemmer.stem(w.toLowerCase())).filter((t) => t);
+  }
+
+  static getMarkedSentences(splitedSentences, stemmedSentences, stemmedOntology) {
+    let rusStemmer = newStemmer('russian');
+    let markedSentences = [];
+
+    for (let i in splitedSentences) {
+      let ontologyTerms = stemmedOntology.filter(so => stemmedSentences[i].join(' ').includes(so.words.join(' ')));
+      let stemmedTextArray = splitedSentences[i].map((w) => {
+        if (/[^а-яА-Яa-zA-Z0-9-]+/.test(w)) {
+          return null;
+        } else {
+          return rusStemmer.stem(w.toLowerCase());
+        }        
+      });
+      let textArray = splitedSentences[i].map((w) => ({word: w, mark: false}));
+
+      for (let ontologyTerm of ontologyTerms) {
+        for (let j in stemmedTextArray) {
+          if (!stemmedTextArray[j]) {
+            continue;
+          }
+
+          let fromJ = parseInt(j);
+          let toJ = parseInt(j);
+
+          let ow = 0;
+
+          console.log(j);
+          console.log(stemmedTextArray);
+          console.log(ontologyTerm);
+
+          while (
+            toJ < stemmedTextArray.length &&
+            ow < ontologyTerm.words.length &&
+            stemmedTextArray[toJ] == ontologyTerm.words[ow]
+          ) {
+            toJ += 2;
+            ow++;
+            console.log(toJ);
+            console.log(ow);
+          }
+
+          if (ow == ontologyTerm.words.length) {
+            for (let k = fromJ; k <= toJ - 2; k++) {
+              textArray[k].mark = true;
+            }
+          }
+        }
+      }
+      
+      let markedText = [];
+
+      for (let word of textArray) {
+        if (markedText.length != 0 && markedText[markedText.length - 1].mark == word.mark) {
+          markedText[markedText.length - 1].text += word.word;
+        } else {
+          markedText.push({text: word.word, mark: word.mark});
+        }       
+      }
+
+      markedSentences.push(markedText);
+    }
+
+    return markedSentences;
   }
 }

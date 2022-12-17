@@ -24,8 +24,8 @@ export default {
     }
   },
   watch: {
-    value() {
-      this.parameter = this.value;
+    value(newValue) {
+      this.parameter = newValue;
     },
   },
   methods: {

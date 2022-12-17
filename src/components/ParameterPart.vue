@@ -50,6 +50,17 @@ export default {
       B: this.pB,
     }
   },
+  watch: {
+    pN(newpN) {
+      this.N = newpN;
+    },
+    pK(newpK) {
+      this.K = newpK;
+    },
+    pB(newpB) {
+      this.B = newpB;
+    },
+  },
   computed: {
     canRanking() {
       return this.hasOntology && this.hasDocuments;
