@@ -3,10 +3,10 @@
     <thead>
       <tr>
         <th class="document__header" scope="col">№</th>
-        <th class="document__header document__start" scope="col" v-on:click="sortByNameClicked">
+        <th class="document__header document__name" scope="col" @click="sortByNameClicked">
           Название документа <span>{{sortSymbols[sortByName]}}</span>
         </th>
-        <th class="document__header" scope="col" v-on:click="sortByRankClicked">
+        <th class="document__header" scope="col" @click="sortByRankClicked">
           Ранг <span>{{sortSymbols[sortByRank]}}</span>
         </th>
         <th class="document__header" scope="col">Инф.</th>
@@ -14,13 +14,16 @@
       </tr>
     </thead>
     <tbody>
-      <document-element v-for="(document, index) in sortedDocuments"
-      :key="index" :document="document"
-      :index="document.index"
-      @doc-details-opened="openDocumentDetails"
-      @doc-details-closed="closeDocumentDetails"
-      @find-rank="findRank"
-      @remove-document="removeDocument"/>
+      <DocumentElement
+        v-for="(document, index) in sortedDocuments"
+        :key="document.id"
+        :document="document"
+        :index="index + 1"
+        @doc-details-opened="openDocumentDetails"
+        @doc-details-closed="closeDocumentDetails"
+        @find-rank="findRank"
+        @remove-document="removeDocument"
+      />
     </tbody>
     
   </table>
@@ -35,28 +38,20 @@ export default {
     DocumentElement,
   },
   props: {
-    documents: Array,
+    prDocuments: Object,
   },
   data() {
     return {
-      docWithOpenedDetailsNum: null,
-      sortByName: 1,
+      docWithOpenedDetailsId: null,
+      sortByName: 2,
       sortByRank: 0,
       sortSymbols: [' ', '▼', '▲'],
-      dDocuments: this.documents,
+      documents: this.prDocuments,
     }
   },
   computed: {
     sortedDocuments() {
-      let documents = [];
-
-      for (let i in this.documents) {
-        documents.push({
-          detailsAreOpened: i == this.docWithOpenedDetailsNum,
-          index: i,
-          ...this.documents[i]
-        });
-      }
+      let documents = Object.values(this.documents);
 
       if (this.sortByName) {
         documents.sort(this.compareDocsByName);
@@ -64,28 +59,29 @@ export default {
         documents.sort(this.compareDocsByRank);
       }
 
-      for (let i in documents) {
-        documents[i].number = Number(i) + 1;
-      }
-
       return documents;
     },
   },
   methods: {
-    openDocumentDetails(num) {
-      this.docWithOpenedDetailsNum = num;
+    openDocumentDetails(id) {
+      if (this.docWithOpenedDetailsId) {
+        this.documents[this.docWithOpenedDetailsId].detailsAreOpened = false;
+      }
+      this.documents[id].detailsAreOpened = true;
+      this.docWithOpenedDetailsId = id;
     },
     closeDocumentDetails() {
-      this.docWithOpenedDetailsNum = null;
+      this.documents[this.docWithOpenedDetailsId].detailsAreOpened = false;
+      this.docWithOpenedDetailsId = null;
     },
-    findRank(index) {
-      this.$emit('find-rank', index);
+    findRank(id) {
+      this.$emit('find-rank', id);
     },
-    removeDocument(index) {
-      if (index < this.docWithOpenedDetailsNum) {
-        this.docWithOpenedDetailsNum--;
+    removeDocument(id) {
+      if (this.docWithOpenedDetailsId == id) {
+        this.docWithOpenedDetailsId = null;
       }
-      this.$emit('remove-document', index);
+      this.$emit('remove-document', id);
     },
     sortByNameClicked() {
       this.sortByRank = 0;
@@ -99,8 +95,6 @@ export default {
           this.sortByName = 1;
           break;
       }
-
-      this.$emit('sort-changed', 'name', this.sortByName);
     },
     sortByRankClicked() {
       this.sortByName = 0;
@@ -114,8 +108,6 @@ export default {
           this.sortByRank = 1;
           break;
       }
-
-      this.$emit('sort-changed', 'rank', this.sortByRank);
     },
     compareDocsByName(a, b) {
       let res = 0;

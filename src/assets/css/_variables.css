@@ -28,14 +28,8 @@
 
   --max-text-input-width: 60px;
 
-  --max-size-main-part: 1220px;
-  --max-size-menu-part: 910px;
-  --max-size-modal: 640px;
-  --max-size-main-part-less: 990px;
-  --max-size-menu-part-less: 760px;
-  --max-size-modal-less: 470px;
-  --max-size-main-part-small: 750px;
-  --max-size-modal-small: 240px;
+  --max-size-main-part: 860px;
+  --pop-error-width: 400px;
 
   --base-border-radius: 10px;
   --avatar-size: 2.25rem;

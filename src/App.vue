@@ -1,14 +1,14 @@
 <template>
-  <base-part/>
+  <main-part/>
 </template>
 
 <script>
-import BasePart from './components/BasePart.vue'
+import MainPart from './components/MainPart.vue'
 
 export default {
   name: 'App',
   components: {
-    BasePart
+    MainPart
   }
 }
 </script>

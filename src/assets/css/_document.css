@@ -1,15 +1,25 @@
 .document {
   font-size: var(--small-font-size);
-  table-layout: auto;
+  table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
 }
 
 .document__header {
+  width: 20%;
   border-bottom: solid;
   border-width: 1px;
   border-color: var(--primary-color);
   user-select: none;
+}
+
+.document__center {
+  text-align: center;
+}
+
+.document__name {
+  width: 100%;
+  text-align: start;
 }
 
 .document__header:hover {
@@ -31,14 +41,6 @@
 
 .document__field_selected {
   background-color: var(--select-color);
-}
-
-.document__center {
-  text-align: center;
-}
-
-.document__start {
-  text-align: start;
 }
 
 .document__details {

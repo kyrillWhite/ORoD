@@ -63,7 +63,7 @@
       </tr> 
     </tbody>
   </table>
-  <button class="button document__details_button" v-else v-on:click="findRank">Вычислить оценку</button>
+  <button class="button document__details_button" v-else @click="findRank">Вычислить оценку</button>
 </template>
 
 <script>
@@ -71,11 +71,6 @@ export default {
   name: 'RankResult',
   props: {
     document: Object,
-  },
-  data() {
-    return {
-
-    };
   },
   methods: {
     findRank() {

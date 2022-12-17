@@ -2,6 +2,7 @@
   margin: var(--average-spacing);
   display: flex;
   flex-direction: column;
+  word-wrap: break-word;
 }
 
 .intermediate-result__title {

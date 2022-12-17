@@ -1,38 +1,68 @@
 <template>
-  <tr :class="document.detailsAreOpened ? 'document__field_selected' : (document.number % 2 == 0 ? `document__field_odd` : '')">
-    <th :class="(document.detailsAreOpened ? 'document__field_selected' : '') + ' document__field'" scope="row">{{document.number}}</th>
-    <td :class="`document__field`">{{document.name}}</td>
-    <td :class="`document__field document__center`">
+  <tr :class="titleClasses">
+    <th
+      class="document__field"
+      :class="{'document__field_selected' : document.detailsAreOpened}"
+      scope="row"
+    >
+      {{index}}
+    </th>
+    <td class="document__field">{{document.name}}</td>
+    <td class="document__field document__center">
       {{!document.ranking ? '-' : document.ranking.rank.toFixed(3)}}
     </td>
-    <td :class="`document__option document__center`">
-      <button :class="document.detailsAreOpened ? 'button__close' : 'button__more'" v-on:click="detailsMenuClick"></button>
+    <td class="document__option document__center">
+      <button
+        :class="{
+          'button__close' : document.detailsAreOpened,
+          'button__more': !document.detailsAreOpened,
+        }"
+        @click="detailsMenuClick">
+      </button>
     </td>
-    <td :class="`document__option document__center`">
-      <button class="button__remove" v-on:click="removeDocument"></button>
+    <td class="document__option document__center">
+      <button class="button__remove" @click="removeDocument"></button>
     </td>
   </tr>
   <tr>
     <td colspan="100">
       <div class="document__details" v-if="document.detailsAreOpened">
         <div class="document__menu">
-          <button :class="`document__menu_item tab ${openedDetailsPart == 1 ? 'tab__active' : ''}`" 
-            v-on:click="openDetailsPart(1)">
+          <button
+            class="document__menu_item tab"
+            :class="{'tab__active': openedDetailsPart == 1}" 
+            @click="openDetailsPart(1)"
+          >
             Исходный текст
           </button>
-          <button :class="menuTabClasses(2)" 
-            v-on:click="openDetailsPart(2)">
+          <button
+            class="document__menu_item tab"
+            :class="menuTabClasses(2)" 
+            @click="openDetailsPart(2)"
+          >
             Промеж. результат
           </button>
-          <button :class="menuTabClasses(3)" 
-            v-on:click="openDetailsPart(3)">
+          <button
+            class="document__menu_item tab"
+            :class="menuTabClasses(3)" 
+            @click="openDetailsPart(3)"
+          >
             Результат оценки
           </button>
         </div>
         <div class="document__details_content">
-          <source-text :document="document" v-if="(openedDetailsPart == 1)"/>
-          <intermediate-result :document="document" v-else-if="(openedDetailsPart == 2)"/>
-          <rank-result :document="document" v-else-if="(openedDetailsPart == 3)" @find-rank="findRank"/>
+          <div class="source-text" v-if="(openedDetailsPart == 1)"> 
+            {{document.text}}
+          </div>
+          <IntermediateResult
+            :document="document"
+            v-else-if="(openedDetailsPart == 2)"
+          />
+          <RankResult
+            :document="document"
+            v-else-if="(openedDetailsPart == 3)"
+            @find-rank="findRank"
+          />
         </div>
       </div>
     </td>
@@ -40,14 +70,12 @@
 </template>
 
 <script>
-import SourceText from './DocumentDetails/SourceText.vue';
 import IntermediateResult from './DocumentDetails/IntermediateResult.vue';
 import RankResult from './DocumentDetails/RankResult.vue';
 
 export default {
   name: 'DocumentElement',
   components: {
-    SourceText,
     IntermediateResult,
     RankResult,
   },
@@ -60,10 +88,23 @@ export default {
       openedDetailsPart: 1,
     }
   },
+  computed: {
+    titleClasses() {
+      let classes = {};
+
+      if (this.document?.detailsAreOpened) {
+        classes['document__field_selected'] = true;
+      } else {
+        classes['document__field_odd'] = this.index % 2 == 0;
+      }
+
+      return classes;
+    },
+  },
   methods: {
     detailsMenuClick() {
       this.$emit(`doc-details-${this.document.detailsAreOpened ? 'closed' : 'opened'}`,
-        this.document.index);
+        this.document.id);
       if (this.document.detailsAreOpened) {
         this.openedDetailsPart = 1;
       }
@@ -74,19 +115,20 @@ export default {
       }
     },
     findRank() {
-      this.$emit('find-rank', this.index);
+      this.$emit('find-rank', this.document.id);
     },
     removeDocument() {
-      this.$emit('remove-document', this.index);
+      this.$emit('remove-document', this.document.id);
     },
     menuTabClasses(index) {
-      let classes = 'document__menu_item tab';
+      let classes = {};
+
       if (this.document?.attachedOntology) {
-        classes += this.openedDetailsPart == index ? ' tab__active' : '';
+        classes['tab__active'] = this.openedDetailsPart == index;
+      } else {
+        classes['tab__not-active'] = true;
       }
-      else {
-        classes += ' tab__not-active';
-      }
+
       return classes;
     },
   },
