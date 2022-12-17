@@ -152,10 +152,6 @@ export default class Attach {
 
           let ow = 0;
 
-          console.log(j);
-          console.log(stemmedTextArray);
-          console.log(ontologyTerm);
-
           while (
             toJ < stemmedTextArray.length &&
             ow < ontologyTerm.words.length &&
@@ -163,8 +159,6 @@ export default class Attach {
           ) {
             toJ += 2;
             ow++;
-            console.log(toJ);
-            console.log(ow);
           }
 
           if (ow == ontologyTerm.words.length) {
