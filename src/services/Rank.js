@@ -79,7 +79,7 @@ export default class Rank {
     let bj = weights[j].filter((w) => w >= B).length;
     let mu = _mu;
     let e = weights[i][j];
-    let semanticProximity = Math.sqrt(pathCount) * 2 * mu * e / (bi + bj);
+    let semanticProximity = (bi + bj) ? Math.sqrt(pathCount) * 2 * mu * e / (bi + bj) : 0;
 
     return {
       s: semanticProximity,
