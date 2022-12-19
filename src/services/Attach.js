@@ -18,13 +18,13 @@ export default class Attach {
     let stemmedSentences = sentences.map((s) => this.stemSentence(s.split(/[^а-яА-Яa-zA-Z0-9-]+/)));
 
     stemmedOntology = stemmedOntology.filter((t) =>
-      t.words.length > 0 && stemmedSentences.some((s) => s.join(' ').includes(t.words.join(' '))));
+      t.words.length > 0 && stemmedSentences.some((s) => this.isArrayIncludeArray(s, t.words)));
     
     let attachedTerms = stemmedOntology.map((t) => t.sourceTerm);
     let markedSentences = this.getMarkedSentences(splitedSentences, stemmedSentences, stemmedOntology);
-    
+
     let filteredSentences = sentences.map((s, i) => ({text: s, markedText: markedSentences[i],
-      terms: attachedTerms.filter((_, j) => stemmedSentences[i].join(' ').includes(stemmedOntology[j].words.join(' ')))}))
+      terms: attachedTerms.filter((_, j) => this.isArrayIncludeArray(stemmedSentences[i], stemmedOntology[j].words))}))
       .filter((s) => s.terms.length);
       
     let attachedOntology = ontology.getCopy();
@@ -42,6 +42,7 @@ export default class Attach {
     }
 
     const neededNodes = this.findNeededNodes(attachedOntology, N);
+    console.log(neededNodes);
     attachedOntology.nodes = attachedOntology.nodes.filter(node => neededNodes.includes(node.id));
     attachedOntology.relations = attachedOntology.relations.filter(rel =>
       neededNodes.includes(rel.source_node_id) && neededNodes.includes(rel.destination_node_id));
@@ -84,6 +85,7 @@ export default class Attach {
     });
 
     let usedNodes = new Set();
+    usedNodes.add(id);
     let query = [];
     query.push({ prevs: [], depth: 0, id: id });
 
@@ -126,12 +128,27 @@ export default class Attach {
     return words.map((w) => rusStemmer.stem(w.toLowerCase())).filter((t) => t);
   }
 
+  static isArrayIncludeArray(array, subarray) {
+    if (subarray.length > array.length) {
+      return false;
+    }
+
+    for (let i = 0; i <= array.length - subarray.length; i++) {
+      let slicesArray = array.slice(i, i + subarray.length);
+
+      if (slicesArray.every((element, index) => element === subarray[index])) {
+        return true;
+      }
+    }
+
+  }
+
   static getMarkedSentences(splitedSentences, stemmedSentences, stemmedOntology) {
     let rusStemmer = newStemmer('russian');
     let markedSentences = [];
 
     for (let i in splitedSentences) {
-      let ontologyTerms = stemmedOntology.filter(so => stemmedSentences[i].join(' ').includes(so.words.join(' ')));
+      let ontologyTerms = stemmedOntology.filter(so => this.isArrayIncludeArray(stemmedSentences[i], so.words));
       let stemmedTextArray = splitedSentences[i].map((w) => {
         if (/[^а-яА-Яa-zA-Z0-9-]+/.test(w)) {
           return null;
