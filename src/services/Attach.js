@@ -42,7 +42,6 @@ export default class Attach {
     }
 
     const neededNodes = this.findNeededNodes(attachedOntology, N);
-    console.log(neededNodes);
     attachedOntology.nodes = attachedOntology.nodes.filter(node => neededNodes.includes(node.id));
     attachedOntology.relations = attachedOntology.relations.filter(rel =>
       neededNodes.includes(rel.source_node_id) && neededNodes.includes(rel.destination_node_id));
