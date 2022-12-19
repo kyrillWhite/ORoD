@@ -8,21 +8,11 @@ export default class Rank {
     let termPairs = [];
 
     let weights = this.findWeights(document);
-    let muSum = 0;
-    let countOfAttached = 0;
-
-    for (let i in ontology.nodes) {
-      if (ontology.nodes[i].name) {
-        muSum += weights[i].filter((w) => w >= B).length;
-        countOfAttached++;
-      }
-    }
-    let mu = muSum / countOfAttached;
 
     for (let i = 0; i < ontology.nodes.length; i++) {
-      for (let j = 0; j < i; j++) {
-        if (ontology.nodes[i].name && ontology.nodes[j].name) {
-          let coefs = this.semanticProximity(document, weights, i, j, N, K, B, mu);
+      for (let j = 0; j < ontology.nodes.length; j++) {
+        if (ontology.nodes[i].name && ontology.nodes[j].name && i != j) {
+          let coefs = this.semanticProximity(document, weights, i, j, N, K, B);
 
           if (coefs) {
             termPairs.push({term1: ontology.nodes[i].name,
@@ -41,7 +31,7 @@ export default class Rank {
     };
   }
   
-  static semanticProximity(document, weights, i, j, N, K, B, _mu) {
+  static semanticProximity(document, weights, i, j, N, K, B) {
     let ontology = document.attachedOntology;
 
     const nodeTerm1 = ontology.nodes[i].name;
@@ -67,9 +57,7 @@ export default class Rank {
       relations[relation.source_node_id].push(relation.destination_node_id);
     }
 
-    let pathCount = 
-      this.findPathsCount(relations, nodeId1, nodeId2, N) +
-      this.findPathsCount(relations, nodeId2, nodeId1, N);
+    let pathCount = this.findPathsCount(relations, nodeId1, nodeId2, N);
 
     if (pathCount === 0) {
       return null;
@@ -77,7 +65,7 @@ export default class Rank {
 
     let bi = weights[i].filter((w) => w >= B).length;
     let bj = weights[j].filter((w) => w >= B).length;
-    let mu = _mu;
+    let mu = weights[i].filter((w) => w >= B).reduce((sum, a) => sum + a, 0) / weights[i].length;
     let e = weights[i][j];
     let semanticProximity = (bi + bj) ? Math.sqrt(pathCount) * 2 * mu * e / (bi + bj) : 0;
 
