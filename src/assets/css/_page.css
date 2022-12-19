@@ -24,8 +24,6 @@
 .page__part {
   margin: 0 0 var(--average-spacing) 0;
   border: solid;
-  border-width: 1px;
-  border-color: var(--primary-color);
   border-radius: var(--base-border-radius);
   width: 100%;
   display: flex;
@@ -37,7 +35,10 @@
   margin: var(--small-spacing) var(--average-spacing);
   text-align: center;
   border-bottom: solid;
-  border-bottom-width: 1px;
+}
+
+.page__part, .page__part_title {
+  border-width: 1px;
   border-color: var(--primary-color);
 }
 
